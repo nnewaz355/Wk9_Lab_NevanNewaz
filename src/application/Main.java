@@ -3,6 +3,7 @@ package application;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javafx.application.Application;
@@ -177,6 +178,30 @@ public class Main extends Application {
 			setStatus("Database error: " + ex.getMessage(), true);
 			ex.printStackTrace();
 		}
+	}
+	
+	private void showAllPatients() {
+		patientList.clear();
+		String sql = "SELECT patient_id, name, age, gender, phone, diagnosis, admission_date FROM patients";
+		
+		try (Connection con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWORD);
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()){
+					while (rs.next()) {
+						patientList.add(new Patient(
+				                rs.getInt("patient_id"),
+				                rs.getString("name"),
+				                rs.getInt("age"),
+				                rs.getString("gender"),
+				                rs.getString("phone"),
+				                rs.getString("diagnosis"),
+				                rs.getDate("admission_date").toLocalDate()
+				            ));
+					}
+				}catch (Exception e) {
+					setStatus("Database error: " + e.getMessage(), true);
+					e.printStackTrace();
+				}
 	}
 
 	private void clearForm() {
