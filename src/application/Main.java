@@ -132,7 +132,7 @@ public class Main extends Application {
 	      return;
 	    }
 
-	    String sql = "INSERT INTO student "
+	    String sql = "INSERT INTO patients "
 	        + "(name, age, gender, phone, diagnosis, admission_date) "
 	        + "VALUES (?, ?, ?, ?, ?, ?)";
 
