@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -84,10 +85,27 @@ public class Main extends Application {
 		HBox buttons = new HBox(10, addPatientButton, clearButton);
 		buttons.setAlignment(Pos.CENTER_RIGHT);
 		
+		TableColumn<Patient, Integer> patientIdCol = new TableColumn<>("Patient ID");
+		patientIdCol.setCellValueFactory(new PropertyValueFactory<>("patientId"));
+		TableColumn<Patient, String> nameCol = new TableColumn<>("Full Name");
+		nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+		TableColumn<Patient, Integer> ageCol = new TableColumn<>("Age");
+		ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
+		TableColumn<Patient, String> genderCol = new TableColumn<>("Gender");
+		genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
+		TableColumn<Patient, String> phoneCol = new TableColumn<>("Phone");
+		phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+		TableColumn<Patient, String> diagnosisCol = new TableColumn<>("Diagnosis");
+		diagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diagnosis"));
+		TableColumn<Patient, LocalDate> dateCol = new TableColumn<>("Admission Date");
+		dateCol.setCellValueFactory(new PropertyValueFactory<>("admissionDate"));
+		patientsTable.getColumns().addAll(patientIdCol, nameCol, ageCol, genderCol, phoneCol, diagnosisCol, dateCol);
+		patientsTable.setItems(patientList);
+		
 		HBox center = new HBox(10, form, patientsTable);
 
 		VBox content = new VBox(12, /*form*/center, buttons, statusLabel);
-		content.setMaxWidth(620);
+		content.setMaxWidth(1240);
 		root.setCenter(content);
 		root.setBottom(new Label("JavaFX • JDBC • MySQL"));
 
