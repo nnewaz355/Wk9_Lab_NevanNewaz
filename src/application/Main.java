@@ -10,18 +10,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
+import java.time.*;
 
 public class Main extends Application {
 
@@ -32,8 +28,9 @@ public class Main extends Application {
 	  private final TextField nameField = new TextField();
 	  private final TextField ageField = new TextField();
 	  private final ComboBox<String> genderBox = new ComboBox<>();
-	  private final TextField emailField = new TextField();
-	  private final ComboBox<String> programBox = new ComboBox<>();
+	  private final TextField phoneField = new TextField();
+	  private final TextField diagnosisField = new TextField();
+	  private final DatePicker dateField = new DatePicker();
 	  private final Label statusLabel = new Label("Enter patient details.");
 
 	  @Override
@@ -57,19 +54,17 @@ public class Main extends Application {
 
 	    nameField.setPromptText("Full name");
 	    ageField.setPromptText("Age in years");
-	    emailField.setPromptText("name@example.com");
+	    phoneField.setPromptText("555-555-5555");
 	    genderBox.getItems().addAll("Female", "Male", "Non-binary", "Prefer not to say");
 	    genderBox.setPromptText("Select gender");
-	    programBox.getItems().addAll(
-	        "Computer Programming", "Cybersecurity",
-	        "Data Analytics", "Cloud Computing");
-	    programBox.setPromptText("Select program");
+	    diagnosisField.setPromptText("Enter reason for visit");
 
-	    addRow(form, 0, "Student name:", nameField);
+	    addRow(form, 0, "Full name:", nameField);
 	    addRow(form, 1, "Age:", ageField);
 	    addRow(form, 2, "Gender:", genderBox);
-	    addRow(form, 3, "Email:", emailField);
-	    addRow(form, 4, "Program:", programBox);
+	    addRow(form, 3, "Phone:", phoneField);
+	    addRow(form, 4, "Reason for visit:", diagnosisField);
+	    addRow(form, 5, "Admission date:", dateField);
 
 	    ColumnConstraints labels = new ColumnConstraints(130);
 	    ColumnConstraints fields = new ColumnConstraints();
@@ -110,11 +105,12 @@ public class Main extends Application {
 	    String name = nameField.getText().trim();
 	    String ageValue = ageField.getText().trim();
 	    String gender = genderBox.getValue();
-	    String email = emailField.getText().trim();
-	    String program = programBox.getValue();
+	    String phone = phoneField.getText().trim();
+	    String diagnosis = diagnosisField.getText().trim();
+	    LocalDate admissionDate = dateField.getValue();
 
 	    if (name.isEmpty() || ageValue.isEmpty() || gender == null
-	        || email.isEmpty() || program == null) {
+	        || phone.isEmpty() || diagnosis.isEmpty()) {
 	      setStatus("Please complete all fields.", true);
 	      return;
 	    }
@@ -131,14 +127,14 @@ public class Main extends Application {
 	      setStatus("Age must be between 16 and 100.", true);
 	      return;
 	    }
-	    if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-	      setStatus("Enter a valid email address.", true);
+	    if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
+	      setStatus("Enter a valid phone number.", true);
 	      return;
 	    }
 
 	    String sql = "INSERT INTO student "
-	        + "(student_name, age, gender, email, program) "
-	        + "VALUES (?, ?, ?, ?, ?)";
+	        + "(name, age, gender, phone, diagnosis, admission_date) "
+	        + "VALUES (?, ?, ?, ?, ?, ?)";
 
 	    try (Connection connection =
 	           DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -147,8 +143,9 @@ public class Main extends Application {
 	      statement.setString(1, name);
 	      statement.setInt(2, age);
 	      statement.setString(3, gender);
-	      statement.setString(4, email);
-	      statement.setString(5, program);
+	      statement.setString(4, phone);
+	      statement.setString(5, diagnosis);
+	      statement.setObject(6, admissionDate);
 
 	      int count = statement.executeUpdate();
 	      if (count == 1) {
@@ -172,8 +169,9 @@ public class Main extends Application {
 	    nameField.clear();
 	    ageField.clear();
 	    genderBox.getSelectionModel().clearSelection();
-	    emailField.clear();
-	    programBox.getSelectionModel().clearSelection();
+	    phoneField.clear();
+	    diagnosisField.clear();
+	    dateField.getEditor().clear();
 	  }
 
 	  private void setStatus(String message, boolean error) {
