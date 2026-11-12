@@ -83,8 +83,10 @@ public class Main extends Application {
 
 		HBox buttons = new HBox(10, addPatientButton, clearButton);
 		buttons.setAlignment(Pos.CENTER_RIGHT);
+		
+		HBox center = new HBox(10, form, patientsTable);
 
-		VBox content = new VBox(12, form, buttons, statusLabel);
+		VBox content = new VBox(12, /*form*/center, buttons, statusLabel);
 		content.setMaxWidth(620);
 		root.setCenter(content);
 		root.setBottom(new Label("JavaFX • JDBC • MySQL"));
