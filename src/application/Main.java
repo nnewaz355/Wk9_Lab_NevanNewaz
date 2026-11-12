@@ -123,8 +123,8 @@ public class Main extends Application {
 	      return;
 	    }
 
-	    if (age < 16 || age > 100) {
-	      setStatus("Age must be between 16 and 100.", true);
+	    if (age < 0 || age > 125) {
+	      setStatus("Age must be between 0 and 125.", true);
 	      return;
 	    }
 	    if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
