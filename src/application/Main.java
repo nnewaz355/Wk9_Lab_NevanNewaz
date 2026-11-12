@@ -1,5 +1,5 @@
 package application;
-	
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,166 +21,162 @@ import java.time.*;
 
 public class Main extends Application {
 
-	  private static final String DB_URL = "jdbc:mysql://localhost:3306/hospital_db";
-	  private static final String DB_USER = "root";
-	  private static final String DB_PASSWORD = "class123"; // Change this
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/hospital_db";
+	private static final String DB_USER = "root";
+	private static final String DB_PASSWORD = "class123"; // Change this
 
-	  private final TextField nameField = new TextField();
-	  private final TextField ageField = new TextField();
-	  private final ComboBox<String> genderBox = new ComboBox<>();
-	  private final TextField phoneField = new TextField();
-	  private final TextField diagnosisField = new TextField();
-	  private final DatePicker dateField = new DatePicker();
-	  private final Label statusLabel = new Label("Enter patient details.");
+	private final TextField nameField = new TextField();
+	private final TextField ageField = new TextField();
+	private final ComboBox<String> genderBox = new ComboBox<>();
+	private final TextField phoneField = new TextField();
+	private final TextField diagnosisField = new TextField();
+	private final DatePicker dateField = new DatePicker();
+	private final Label statusLabel = new Label("Enter patient details.");
+	private final TableView patientsTable = new TableView();
 
-	  @Override
+	@Override
 
-	  public void start(Stage stage) {
-	    BorderPane root = new BorderPane();
-	    root.setPadding(new Insets(20));
+	public void start(Stage stage) {
+		BorderPane root = new BorderPane();
+		root.setPadding(new Insets(20));
 
-	    Label heading = new Label("Student Registration");
+		Label heading = new Label("Student Registration");
 
-	    heading.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-	    Label subtitle = new Label("College Student Services");
-	    VBox header = new VBox(5, heading, subtitle);
-	    header.setPadding(new Insets(0, 0, 20, 0));
-	    root.setTop(header);
+		heading.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+		Label subtitle = new Label("College Student Services");
+		VBox header = new VBox(5, heading, subtitle);
+		header.setPadding(new Insets(0, 0, 20, 0));
+		root.setTop(header);
 
-	    GridPane form = new GridPane();
-	    form.setHgap(12);
-	    form.setVgap(14);
-	    form.setPadding(new Insets(20));
+		GridPane form = new GridPane();
+		form.setHgap(12);
+		form.setVgap(14);
+		form.setPadding(new Insets(20));
 
-	    nameField.setPromptText("Full name");
-	    ageField.setPromptText("Age in years");
-	    phoneField.setPromptText("555-555-5555");
-	    genderBox.getItems().addAll("Female", "Male", "Non-binary", "Prefer not to say");
-	    genderBox.setPromptText("Select gender");
-	    diagnosisField.setPromptText("Enter reason for visit");
+		nameField.setPromptText("Full name");
+		ageField.setPromptText("Age in years");
+		phoneField.setPromptText("555-555-5555");
+		genderBox.getItems().addAll("Female", "Male", "Non-binary", "Prefer not to say");
+		genderBox.setPromptText("Select gender");
+		diagnosisField.setPromptText("Enter reason for visit");
 
-	    addRow(form, 0, "Full name:", nameField);
-	    addRow(form, 1, "Age:", ageField);
-	    addRow(form, 2, "Gender:", genderBox);
-	    addRow(form, 3, "Phone:", phoneField);
-	    addRow(form, 4, "Reason for visit:", diagnosisField);
-	    addRow(form, 5, "Admission date:", dateField);
+		addRow(form, 0, "Full name:", nameField);
+		addRow(form, 1, "Age:", ageField);
+		addRow(form, 2, "Gender:", genderBox);
+		addRow(form, 3, "Phone:", phoneField);
+		addRow(form, 4, "Reason for visit:", diagnosisField);
+		addRow(form, 5, "Admission date:", dateField);
 
-	    ColumnConstraints labels = new ColumnConstraints(130);
-	    ColumnConstraints fields = new ColumnConstraints();
-	    fields.setHgrow(Priority.ALWAYS);
-	    form.getColumnConstraints().addAll(labels, fields);
+		ColumnConstraints labels = new ColumnConstraints(130);
+		ColumnConstraints fields = new ColumnConstraints();
+		fields.setHgrow(Priority.ALWAYS);
+		form.getColumnConstraints().addAll(labels, fields);
 
-	    Button addPatientButton = new Button("Add Patient");
-	    addPatientButton.setDefaultButton(true);
-	    addPatientButton.setOnAction(e -> addPatient());
+		Button addPatientButton = new Button("Add Patient");
+		addPatientButton.setDefaultButton(true);
+		addPatientButton.setOnAction(e -> addPatient());
 
-	    Button clearButton = new Button("Clear");
-	    clearButton.setOnAction(e -> clearForm());
+		Button clearButton = new Button("Clear");
+		clearButton.setOnAction(e -> clearForm());
 
-	    HBox buttons = new HBox(10, addPatientButton, clearButton);
-	    buttons.setAlignment(Pos.CENTER_RIGHT);
+		HBox buttons = new HBox(10, addPatientButton, clearButton);
+		buttons.setAlignment(Pos.CENTER_RIGHT);
 
-	    VBox content = new VBox(12, form, buttons, statusLabel);
-	    content.setMaxWidth(620);
-	    root.setCenter(content);
-	    root.setBottom(new Label("JavaFX • JDBC • MySQL"));
+		VBox content = new VBox(12, form, buttons, statusLabel);
+		content.setMaxWidth(620);
+		root.setCenter(content);
+		root.setBottom(new Label("JavaFX • JDBC • MySQL"));
 
-	    stage.setTitle("Student Registration System");
-	    stage.setScene(new Scene(root, 700, 520));
-	    stage.show();
-	  }
-
-	  private void addRow(GridPane grid, int row, String text, Control control) {
-	    Label label = new Label(text);
-	    label.setStyle("-fx-font-weight: bold;");
-	    control.setMaxWidth(Double.MAX_VALUE);
-	    grid.add(label, 0, row);
-	    grid.add(control, 1, row);
-	  }
-
-
-
-	  private void addPatient() {
-	    String name = nameField.getText().trim();
-	    String ageValue = ageField.getText().trim();
-	    String gender = genderBox.getValue();
-	    String phone = phoneField.getText().trim();
-	    String diagnosis = diagnosisField.getText().trim();
-	    LocalDate admissionDate = dateField.getValue();
-
-	    if (name.isEmpty() || ageValue.isEmpty() || gender == null
-	        || phone.isEmpty() || diagnosis.isEmpty() || admissionDate == null) {
-	      setStatus("Please complete all fields.", true);
-	      return;
-	    }
-
-	    int age;
-	    try {
-	      age = Integer.parseInt(ageValue);
-	    } catch (NumberFormatException ex) {
-	      setStatus("Age must be a whole number.", true);
-	      return;
-	    }
-
-	    if (age < 0 || age > 125) {
-	      setStatus("Age must be between 0 and 125.", true);
-	      return;
-	    }
-	    if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
-	      setStatus("Enter a valid phone number.", true);
-	      return;
-	    }
-
-	    String sql = "INSERT INTO patients "
-	        + "(name, age, gender, phone, diagnosis, admission_date) "
-	        + "VALUES (?, ?, ?, ?, ?, ?)";
-
-	    try (Connection connection =
-	           DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-	       PreparedStatement statement = connection.prepareStatement(sql)) {
-
-	      statement.setString(1, name);
-	      statement.setInt(2, age);
-	      statement.setString(3, gender);
-	      statement.setString(4, phone);
-	      statement.setString(5, diagnosis);
-	      statement.setObject(6, admissionDate);
-
-	      int count = statement.executeUpdate();
-	      if (count == 1) {
-	        setStatus("Patient added successfully!", false);
-	        clearFields();
-	      } else {
-	        setStatus("No record was inserted.", true);
-	      }
-	    } catch (SQLException ex) {
-	      setStatus("Database error: " + ex.getMessage(), true);
-	      ex.printStackTrace();
-	    }
-	  }
-
-	  private void clearForm() {
-	    clearFields();
-	    setStatus("Form cleared.", false);
-	  }
-
-	  private void clearFields() {
-	    nameField.clear();
-	    ageField.clear();
-	    genderBox.getSelectionModel().clearSelection();
-	    phoneField.clear();
-	    diagnosisField.clear();
-	    dateField.getEditor().clear();
-	  }
-
-	  private void setStatus(String message, boolean error) {
-	    statusLabel.setText(message);
-	    statusLabel.setStyle(error ? "-fx-text-fill: #b00020;"
-	                  : "-fx-text-fill: #167545;");
-	  }
-
-	  public static void main(String[] args) {
-	    launch(args);
-	  }
+		stage.setTitle("Student Registration System");
+		stage.setScene(new Scene(root, 700, 520));
+		stage.show();
 	}
+
+	private void addRow(GridPane grid, int row, String text, Control control) {
+		Label label = new Label(text);
+		label.setStyle("-fx-font-weight: bold;");
+		control.setMaxWidth(Double.MAX_VALUE);
+		grid.add(label, 0, row);
+		grid.add(control, 1, row);
+	}
+
+	private void addPatient() {
+		String name = nameField.getText().trim();
+		String ageValue = ageField.getText().trim();
+		String gender = genderBox.getValue();
+		String phone = phoneField.getText().trim();
+		String diagnosis = diagnosisField.getText().trim();
+		LocalDate admissionDate = dateField.getValue();
+
+		if (name.isEmpty() || ageValue.isEmpty() || gender == null || phone.isEmpty() || diagnosis.isEmpty()
+				|| admissionDate == null) {
+			setStatus("Please complete all fields.", true);
+			return;
+		}
+
+		int age;
+		try {
+			age = Integer.parseInt(ageValue);
+		} catch (NumberFormatException ex) {
+			setStatus("Age must be a whole number.", true);
+			return;
+		}
+
+		if (age < 0 || age > 125) {
+			setStatus("Age must be between 0 and 125.", true);
+			return;
+		}
+		if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
+			setStatus("Enter a valid phone number.", true);
+			return;
+		}
+
+		String sql = "INSERT INTO patients " + "(name, age, gender, phone, diagnosis, admission_date) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
+
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setString(1, name);
+			statement.setInt(2, age);
+			statement.setString(3, gender);
+			statement.setString(4, phone);
+			statement.setString(5, diagnosis);
+			statement.setObject(6, admissionDate);
+
+			int count = statement.executeUpdate();
+			if (count == 1) {
+				setStatus("Patient added successfully!", false);
+				clearFields();
+			} else {
+				setStatus("No record was inserted.", true);
+			}
+		} catch (SQLException ex) {
+			setStatus("Database error: " + ex.getMessage(), true);
+			ex.printStackTrace();
+		}
+	}
+
+	private void clearForm() {
+		clearFields();
+		setStatus("Form cleared.", false);
+	}
+
+	private void clearFields() {
+		nameField.clear();
+		ageField.clear();
+		genderBox.getSelectionModel().clearSelection();
+		phoneField.clear();
+		diagnosisField.clear();
+		dateField.getEditor().clear();
+	}
+
+	private void setStatus(String message, boolean error) {
+		statusLabel.setText(message);
+		statusLabel.setStyle(error ? "-fx-text-fill: #b00020;" : "-fx-text-fill: #167545;");
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+}
