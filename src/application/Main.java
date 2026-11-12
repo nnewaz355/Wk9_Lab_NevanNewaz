@@ -71,14 +71,14 @@ public class Main extends Application {
 	    fields.setHgrow(Priority.ALWAYS);
 	    form.getColumnConstraints().addAll(labels, fields);
 
-	    Button registerButton = new Button("Register");
-	    registerButton.setDefaultButton(true);
-	    registerButton.setOnAction(e -> registerStudent());
+	    Button addPatientButton = new Button("Add Patient");
+	    addPatientButton.setDefaultButton(true);
+	    addPatientButton.setOnAction(e -> addPatient());
 
 	    Button clearButton = new Button("Clear");
 	    clearButton.setOnAction(e -> clearForm());
 
-	    HBox buttons = new HBox(10, registerButton, clearButton);
+	    HBox buttons = new HBox(10, addPatientButton, clearButton);
 	    buttons.setAlignment(Pos.CENTER_RIGHT);
 
 	    VBox content = new VBox(12, form, buttons, statusLabel);
@@ -101,7 +101,7 @@ public class Main extends Application {
 
 
 
-	  private void registerStudent() {
+	  private void addPatient() {
 	    String name = nameField.getText().trim();
 	    String ageValue = ageField.getText().trim();
 	    String gender = genderBox.getValue();
