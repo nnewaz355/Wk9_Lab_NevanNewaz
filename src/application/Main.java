@@ -34,7 +34,7 @@ public class Main extends Application {
 	  private final ComboBox<String> genderBox = new ComboBox<>();
 	  private final TextField emailField = new TextField();
 	  private final ComboBox<String> programBox = new ComboBox<>();
-	  private final Label statusLabel = new Label("Enter student details.");
+	  private final Label statusLabel = new Label("Enter patient details.");
 
 	  @Override
 
@@ -152,7 +152,7 @@ public class Main extends Application {
 
 	      int count = statement.executeUpdate();
 	      if (count == 1) {
-	        setStatus("Student registered successfully!", false);
+	        setStatus("Patient added successfully!", false);
 	        clearFields();
 	      } else {
 	        setStatus("No record was inserted.", true);
