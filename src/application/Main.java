@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javafx.application.Application;
+import javafx.collections.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -32,7 +33,8 @@ public class Main extends Application {
 	private final TextField diagnosisField = new TextField();
 	private final DatePicker dateField = new DatePicker();
 	private final Label statusLabel = new Label("Enter patient details.");
-	private final TableView patientsTable = new TableView();
+	private final TableView<Patient> patientsTable = new TableView<>();
+	private final ObservableList<Patient> patientList = FXCollections.observableArrayList();
 
 	@Override
 
