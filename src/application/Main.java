@@ -110,7 +110,7 @@ public class Main extends Application {
 	    LocalDate admissionDate = dateField.getValue();
 
 	    if (name.isEmpty() || ageValue.isEmpty() || gender == null
-	        || phone.isEmpty() || diagnosis.isEmpty()) {
+	        || phone.isEmpty() || diagnosis.isEmpty() || admissionDate == null) {
 	      setStatus("Please complete all fields.", true);
 	      return;
 	    }
