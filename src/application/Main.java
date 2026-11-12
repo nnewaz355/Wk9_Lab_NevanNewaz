@@ -21,7 +21,7 @@ import java.time.*;
 
 public class Main extends Application {
 
-	  private static final String DB_URL = "jdbc:mysql://localhost:3306/dummy";
+	  private static final String DB_URL = "jdbc:mysql://localhost:3306/hospital_db";
 	  private static final String DB_USER = "root";
 	  private static final String DB_PASSWORD = "class123"; // Change this
 
