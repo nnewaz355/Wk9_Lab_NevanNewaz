@@ -79,11 +79,15 @@ public class Main extends Application {
 		Button addPatientButton = new Button("Add Patient");
 		addPatientButton.setDefaultButton(true);
 		addPatientButton.setOnAction(e -> addPatient());
+		
+		Button updateButton = new Button("Update");
+		
+		Button deleteButton = new Button("Delete");
 
 		Button clearButton = new Button("Clear");
 		clearButton.setOnAction(e -> clearForm());
 
-		HBox buttons = new HBox(10, addPatientButton, clearButton);
+		HBox buttons = new HBox(10, addPatientButton, updateButton, deleteButton, clearButton);
 		buttons.setAlignment(Pos.CENTER_RIGHT);
 		
 		VBox formPane = new VBox(15, form, buttons);
