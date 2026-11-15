@@ -46,7 +46,7 @@ public class Main extends Application {
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(20));
 
-		Label heading = new Label("Student Registration");
+		Label heading = new Label("Hospital Management System");
 
 		heading.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 		Label subtitle = new Label("College Student Services");
