@@ -37,6 +37,8 @@ public class Main extends Application {
 	private final Label statusLabel = new Label("Enter patient details.");
 	private final TableView<Patient> patientsTable = new TableView<>();
 	private final ObservableList<Patient> patientList = FXCollections.observableArrayList();
+	private final TextField patientIdField = new TextField();
+	private final TextField searchField = new TextField();
 
 	@Override
 
@@ -87,12 +89,25 @@ public class Main extends Application {
 		Button clearButton = new Button("Clear");
 		clearButton.setOnAction(e -> clearForm());
 
-		HBox buttons = new HBox(10, addPatientButton, updateButton, deleteButton, clearButton);
-		buttons.setAlignment(Pos.CENTER_RIGHT);
+		HBox formButtons = new HBox(10, addPatientButton, updateButton, deleteButton, clearButton);
+		formButtons.setAlignment(Pos.CENTER_RIGHT);
 		
-		VBox formPane = new VBox(15, form, buttons);
+		VBox formPane = new VBox(15, form, formButtons);
 	    formPane.setPrefWidth(380);
 	    formPane.setPadding(new Insets(15));
+	    
+	    searchField.setPromptText("Search by name or phone...");
+	    HBox.setHgrow(searchField, Priority.ALWAYS);
+
+	    Button searchButton = new Button("Search");
+
+	    Button showAllButton = new Button("Show All");
+	    showAllButton.setOnAction(e -> showAllPatients());
+
+	    HBox searchBar = new HBox(8, searchField, searchButton, showAllButton);
+	    searchBar.setAlignment(Pos.CENTER_LEFT);
+	    
+	    VBox tablePane = new VBox(15, patientsTable, searchBar);
 		
 		TableColumn<Patient, Integer> patientIdCol = new TableColumn<>("Patient ID");
 		patientIdCol.setCellValueFactory(new PropertyValueFactory<>("patientId"));
@@ -111,7 +126,7 @@ public class Main extends Application {
 		patientsTable.getColumns().addAll(patientIdCol, nameCol, ageCol, genderCol, phoneCol, diagnosisCol, dateCol);
 		patientsTable.setItems(patientList);
 		
-		HBox center = new HBox(10, formPane, patientsTable);
+		HBox center = new HBox(10, formPane, tablePane);
 
 		VBox content = new VBox(12, /*form*/center, statusLabel);
 		content.setMaxWidth(1240);
