@@ -86,6 +86,10 @@ public class Main extends Application {
 		HBox buttons = new HBox(10, addPatientButton, clearButton);
 		buttons.setAlignment(Pos.CENTER_RIGHT);
 		
+		VBox formPane = new VBox(15, form, buttons);
+	    formPane.setPrefWidth(380);
+	    formPane.setPadding(new Insets(15));
+		
 		TableColumn<Patient, Integer> patientIdCol = new TableColumn<>("Patient ID");
 		patientIdCol.setCellValueFactory(new PropertyValueFactory<>("patientId"));
 		TableColumn<Patient, String> nameCol = new TableColumn<>("Full Name");
@@ -103,9 +107,9 @@ public class Main extends Application {
 		patientsTable.getColumns().addAll(patientIdCol, nameCol, ageCol, genderCol, phoneCol, diagnosisCol, dateCol);
 		patientsTable.setItems(patientList);
 		
-		HBox center = new HBox(10, form, patientsTable);
+		HBox center = new HBox(10, formPane, patientsTable);
 
-		VBox content = new VBox(12, /*form*/center, buttons, statusLabel);
+		VBox content = new VBox(12, /*form*/center, statusLabel);
 		content.setMaxWidth(1240);
 		root.setCenter(content);
 		root.setBottom(new Label("JavaFX • JDBC • MySQL"));
