@@ -57,7 +57,8 @@ public class Main extends Application {
 		form.setHgap(12);
 		form.setVgap(14);
 		form.setPadding(new Insets(20));
-
+		
+		patientIdField.setEditable(false);
 		nameField.setPromptText("Full name");
 		ageField.setPromptText("Age in years");
 		phoneField.setPromptText("555-555-5555");
@@ -65,12 +66,13 @@ public class Main extends Application {
 		genderBox.setPromptText("Select gender");
 		diagnosisField.setPromptText("Enter reason for visit");
 
-		addRow(form, 0, "Full name:", nameField);
-		addRow(form, 1, "Age:", ageField);
-		addRow(form, 2, "Gender:", genderBox);
-		addRow(form, 3, "Phone:", phoneField);
-		addRow(form, 4, "Reason for visit:", diagnosisField);
-		addRow(form, 5, "Admission date:", dateField);
+		addRow(form, 0, "Patient ID:", patientIdField);
+		addRow(form, 1, "Full name:", nameField);
+		addRow(form, 2, "Age:", ageField);
+		addRow(form, 3, "Gender:", genderBox);
+		addRow(form, 4, "Phone:", phoneField);
+		addRow(form, 5, "Reason for visit:", diagnosisField);
+		addRow(form, 6, "Admission date:", dateField);
 
 		ColumnConstraints labels = new ColumnConstraints(130);
 		ColumnConstraints fields = new ColumnConstraints();
