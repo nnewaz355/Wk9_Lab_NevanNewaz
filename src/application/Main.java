@@ -85,6 +85,19 @@ public class Main extends Application {
 		Button updateButton = new Button("Update");
 		
 		Button deleteButton = new Button("Delete");
+		
+		patientsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, selectedPatient) -> {
+		    if (selectedPatient != null) {
+		        int selectedPatientId = selectedPatient.getPatientId();
+		        nameField.setText(selectedPatient.getName());
+		        ageField.setText(String.valueOf(selectedPatient.getAge()));
+		        genderBox.setValue(selectedPatient.getGender());
+		        phoneField.setText(selectedPatient.getPhone());
+		        diagnosisField.setText(selectedPatient.getDiagnosis());
+		        dateField.setValue(selectedPatient.getAdmissionDate());
+		        setStatus("Selected Patient ID: " + selectedPatient.getPatientId(), false);
+		    }
+		});
 
 		Button clearButton = new Button("Clear");
 		clearButton.setOnAction(e -> clearForm());
