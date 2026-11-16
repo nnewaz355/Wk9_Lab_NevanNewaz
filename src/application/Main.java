@@ -208,6 +208,7 @@ public class Main extends Application {
 			int count = statement.executeUpdate();
 			if (count == 1) {
 				setStatus("Patient added successfully!", false);
+				showAllPatients();
 				clearFields();
 			} else {
 				setStatus("No record was inserted.", true);
@@ -227,7 +228,6 @@ public class Main extends Application {
 	    }
 	    
 	    int patientId = Integer.parseInt(idText);
-	    String patientName = nameField.getText().trim();
 
 	    String sql = "DELETE FROM patients WHERE patient_id = ?";
 
