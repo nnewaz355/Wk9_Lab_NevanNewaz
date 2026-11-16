@@ -81,25 +81,24 @@ public class Main extends Application {
 		Button addPatientButton = new Button("Add Patient");
 		addPatientButton.setDefaultButton(true);
 		addPatientButton.setOnAction(e -> addPatient());
-		
+
 		Button updateButton = new Button("Update");
 		updateButton.setOnAction(e -> updatePatient());
-		
+
 		Button deleteButton = new Button("Delete");
 		deleteButton.setOnAction(e -> deletePatient());
-	
-		
+
 		patientsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, selectedPatient) -> {
-		    if (selectedPatient != null) {
-		    	patientIdField.setText(String.valueOf(selectedPatient.getPatientId()));
-		        nameField.setText(selectedPatient.getName());
-		        ageField.setText(String.valueOf(selectedPatient.getAge()));
-		        genderBox.setValue(selectedPatient.getGender());
-		        phoneField.setText(selectedPatient.getPhone());
-		        diagnosisField.setText(selectedPatient.getDiagnosis());
-		        dateField.setValue(selectedPatient.getAdmissionDate());
-		        setStatus("Selected Patient ID: " + selectedPatient.getPatientId(), false);
-		    }
+			if (selectedPatient != null) {
+				patientIdField.setText(String.valueOf(selectedPatient.getPatientId()));
+				nameField.setText(selectedPatient.getName());
+				ageField.setText(String.valueOf(selectedPatient.getAge()));
+				genderBox.setValue(selectedPatient.getGender());
+				phoneField.setText(selectedPatient.getPhone());
+				diagnosisField.setText(selectedPatient.getDiagnosis());
+				dateField.setValue(selectedPatient.getAdmissionDate());
+				setStatus("Selected Patient ID: " + selectedPatient.getPatientId(), false);
+			}
 		});
 
 		Button clearButton = new Button("Clear");
@@ -107,24 +106,25 @@ public class Main extends Application {
 
 		HBox formButtons = new HBox(10, addPatientButton, updateButton, deleteButton, clearButton);
 		formButtons.setAlignment(Pos.CENTER_RIGHT);
-		
+
 		VBox formPane = new VBox(15, form, formButtons);
-	    formPane.setPrefWidth(380);
-	    formPane.setPadding(new Insets(15));
-	    
-	    searchField.setPromptText("Search by name or phone...");
-	    HBox.setHgrow(searchField, Priority.ALWAYS);
+		formPane.setPrefWidth(380);
+		formPane.setPadding(new Insets(15));
 
-	    Button searchButton = new Button("Search");
+		searchField.setPromptText("Search by name or phone...");
+		HBox.setHgrow(searchField, Priority.ALWAYS);
 
-	    Button showAllButton = new Button("Show All");
-	    showAllButton.setOnAction(e -> showAllPatients());
+		Button searchButton = new Button("Search");
+		searchButton.setOnAction(e -> searchPatients());
 
-	    HBox searchBar = new HBox(8, searchField, searchButton, showAllButton);
-	    searchBar.setAlignment(Pos.CENTER_LEFT);
-	    
-	    VBox tablePane = new VBox(15, patientsTable, searchBar);
-		
+		Button showAllButton = new Button("Show All");
+		showAllButton.setOnAction(e -> showAllPatients());
+
+		HBox searchBar = new HBox(8, searchField, searchButton, showAllButton);
+		searchBar.setAlignment(Pos.CENTER_LEFT);
+
+		VBox tablePane = new VBox(15, patientsTable, searchBar);
+
 		TableColumn<Patient, Integer> patientIdCol = new TableColumn<>("Patient ID");
 		patientIdCol.setCellValueFactory(new PropertyValueFactory<>("patientId"));
 		TableColumn<Patient, String> nameCol = new TableColumn<>("Full Name");
@@ -141,10 +141,10 @@ public class Main extends Application {
 		dateCol.setCellValueFactory(new PropertyValueFactory<>("admissionDate"));
 		patientsTable.getColumns().addAll(patientIdCol, nameCol, ageCol, genderCol, phoneCol, diagnosisCol, dateCol);
 		patientsTable.setItems(patientList);
-		
+
 		HBox center = new HBox(10, formPane, tablePane);
 
-		VBox content = new VBox(12, /*form*/center, statusLabel);
+		VBox content = new VBox(12, /* form */center, statusLabel);
 		content.setMaxWidth(1240);
 		root.setCenter(content);
 		root.setBottom(new Label("JavaFX • JDBC • MySQL"));
@@ -219,15 +219,15 @@ public class Main extends Application {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	private void updatePatient() {
-	    Patient selected = patientsTable.getSelectionModel().getSelectedItem();
-	    if (selected == null) {
-	      setStatus("Select a patient in the table before updating.", true);
-	      return;
-	    }
-	    
-	    String name = nameField.getText().trim();
+		Patient selected = patientsTable.getSelectionModel().getSelectedItem();
+		if (selected == null) {
+			setStatus("Select a patient in the table before updating.", true);
+			return;
+		}
+
+		String name = nameField.getText().trim();
 		String ageValue = ageField.getText().trim();
 		String gender = genderBox.getValue();
 		String phone = phoneField.getText().trim();
@@ -257,13 +257,13 @@ public class Main extends Application {
 			return;
 		}
 
-	    String sql = "UPDATE patients SET name = ?, age = ?, gender = ?, phone = ?, "
-	        + "diagnosis = ?, admission_date = ? WHERE patient_id = ?";
+		String sql = "UPDATE patients SET name = ?, age = ?, gender = ?, phone = ?, "
+				+ "diagnosis = ?, admission_date = ? WHERE patient_id = ?";
 
-	    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-	         PreparedStatement statement = connection.prepareStatement(sql)) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
 
-	    	statement.setString(1, name);
+			statement.setString(1, name);
 			statement.setInt(2, age);
 			statement.setString(3, gender);
 			statement.setString(4, phone);
@@ -278,65 +278,90 @@ public class Main extends Application {
 			} else {
 				setStatus("No record was updated.", true);
 			}
-	    } catch (SQLException ex) {
-	    	setStatus("Database error: " + ex.getMessage(), true);
-	    	ex.printStackTrace();
-	    }
-	  }
-	
-	private void deletePatient() {
-	    String idText = patientIdField.getText().trim();
-
-	    if (idText.isEmpty()) {
-	        setStatus("Please select a patient record from the table to delete.", true);
-	        return;
-	    }
-	    
-	    int patientId = Integer.parseInt(idText);
-
-	    String sql = "DELETE FROM patients WHERE patient_id = ?";
-
-	    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-	         PreparedStatement statement = connection.prepareStatement(sql)) {
-
-	        statement.setInt(1, patientId);
-
-	        int count = statement.executeUpdate();
-	        if (count == 1) {
-	            showAllPatients(); // Refresh TableView
-	            clearFields();     // Reset form and table selection
-	            setStatus("Patient ID " + patientId + " deleted successfully!", false);
-	        } else {
-	            setStatus("No record was deleted.", true);
-	        }
-	    } catch (SQLException ex) {
-	        setStatus("Database error: " + ex.getMessage(), true);
-	        ex.printStackTrace();
-	    }
+		} catch (SQLException ex) {
+			setStatus("Database error: " + ex.getMessage(), true);
+			ex.printStackTrace();
+		}
 	}
-	
+
+	private void deletePatient() {
+		String idText = patientIdField.getText().trim();
+
+		if (idText.isEmpty()) {
+			setStatus("Please select a patient record from the table to delete.", true);
+			return;
+		}
+
+		int patientId = Integer.parseInt(idText);
+
+		String sql = "DELETE FROM patients WHERE patient_id = ?";
+
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setInt(1, patientId);
+
+			int count = statement.executeUpdate();
+			if (count == 1) {
+				showAllPatients(); // Refresh TableView
+				clearFields(); // Reset form and table selection
+				setStatus("Patient ID " + patientId + " deleted successfully!", false);
+			} else {
+				setStatus("No record was deleted.", true);
+			}
+		} catch (SQLException ex) {
+			setStatus("Database error: " + ex.getMessage(), true);
+			ex.printStackTrace();
+		}
+	}
+
+	private void searchPatients() {
+		String query = searchField.getText().trim();
+		if (query.isEmpty()) {
+			showAllPatients();
+			setStatus("Showing all patients.", false);
+			return;
+		}
+
+		String sql = "SELECT patient_id, name, age, gender, phone, diagnosis, admission_date FROM patients WHERE name LIKE ? OR phone LIKE ? ORDER BY patient_id";
+
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setString(1, "%" + query + "%");
+			statement.setString(2, "%" + query + "%");
+
+			try (ResultSet resultSet = statement.executeQuery()) {
+				patientList.clear();
+				while (resultSet.next()) {
+					patientList.add(new Patient(resultSet.getInt("patient_id"), resultSet.getString("name"),
+							resultSet.getInt("age"), resultSet.getString("gender"), resultSet.getString("phone"),
+							resultSet.getString("diagnosis"), resultSet.getDate("admission_date").toLocalDate()));
+				}
+			}
+			setStatus(patientList.size() + " record(s) matched \"" + query + "\".", false);
+		} catch (SQLException ex) {
+			setStatus("Database error: " + ex.getMessage(), true);
+			ex.printStackTrace();
+		}
+	}
+
 	private void showAllPatients() {
 		patientList.clear();
 		String sql = "SELECT patient_id, name, age, gender, phone, diagnosis, admission_date FROM patients";
-		
-		try (Connection con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWORD);
+
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 				PreparedStatement ps = con.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()){
-					while (rs.next()) {
-						patientList.add(new Patient(
-				                rs.getInt("patient_id"),
-				                rs.getString("name"),
-				                rs.getInt("age"),
-				                rs.getString("gender"),
-				                rs.getString("phone"),
-				                rs.getString("diagnosis"),
-				                rs.getDate("admission_date").toLocalDate()
-				            ));
-					}
-				}catch (Exception e) {
-					setStatus("Database error: " + e.getMessage(), true);
-					e.printStackTrace();
-				}
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				patientList.add(new Patient(rs.getInt("patient_id"), rs.getString("name"), rs.getInt("age"),
+						rs.getString("gender"), rs.getString("phone"), rs.getString("diagnosis"),
+						rs.getDate("admission_date").toLocalDate()));
+			}
+		} catch (Exception e) {
+			setStatus("Database error: " + e.getMessage(), true);
+			e.printStackTrace();
+		}
 	}
 
 	private void clearForm() {
