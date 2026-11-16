@@ -191,6 +191,10 @@ public class Main extends Application {
 			setStatus("Enter a valid phone number.", true);
 			return;
 		}
+		if (admissionDate.isAfter(LocalDate.now())) {
+			setStatus("Admission date cannot be in the future.", true);
+			return;
+		}
 
 		String sql = "INSERT INTO patients " + "(name, age, gender, phone, diagnosis, admission_date) "
 				+ "VALUES (?, ?, ?, ?, ?, ?)";
@@ -253,6 +257,10 @@ public class Main extends Application {
 		}
 		if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
 			setStatus("Enter a valid phone number.", true);
+			return;
+		}
+		if (admissionDate.isAfter(LocalDate.now())) {
+			setStatus("Admission date cannot be in the future.", true);
 			return;
 		}
 
