@@ -85,10 +85,12 @@ public class Main extends Application {
 		Button updateButton = new Button("Update");
 		
 		Button deleteButton = new Button("Delete");
+		deleteButton.setOnAction(e -> deletePatient());
+	
 		
 		patientsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, selectedPatient) -> {
 		    if (selectedPatient != null) {
-		        int selectedPatientId = selectedPatient.getPatientId();
+		    	patientIdField.setText(String.valueOf(selectedPatient.getPatientId()));
 		        nameField.setText(selectedPatient.getName());
 		        ageField.setText(String.valueOf(selectedPatient.getAge()));
 		        genderBox.setValue(selectedPatient.getGender());
@@ -214,6 +216,38 @@ public class Main extends Application {
 			setStatus("Database error: " + ex.getMessage(), true);
 			ex.printStackTrace();
 		}
+	}
+	
+	private void deletePatient() {
+	    String idText = patientIdField.getText().trim();
+
+	    if (idText.isEmpty()) {
+	        setStatus("Please select a patient record from the table to delete.", true);
+	        return;
+	    }
+	    
+	    int patientId = Integer.parseInt(idText);
+	    String patientName = nameField.getText().trim();
+
+	    String sql = "DELETE FROM patients WHERE patient_id = ?";
+
+	    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+	        statement.setInt(1, patientId);
+
+	        int count = statement.executeUpdate();
+	        if (count == 1) {
+	            showAllPatients(); // Refresh TableView
+	            clearFields();     // Reset form and table selection
+	            setStatus("Patient ID " + patientId + " deleted successfully!", false);
+	        } else {
+	            setStatus("No record was deleted.", true);
+	        }
+	    } catch (SQLException ex) {
+	        setStatus("Database error: " + ex.getMessage(), true);
+	        ex.printStackTrace();
+	    }
 	}
 	
 	private void showAllPatients() {
