@@ -164,6 +164,7 @@ public class Main extends Application {
 	}
 
 	private void addPatient() {
+		/*
 		String name = nameField.getText().trim();
 		String ageValue = ageField.getText().trim();
 		String gender = genderBox.getValue();
@@ -195,6 +196,19 @@ public class Main extends Application {
 		}
 		if (admissionDate.isAfter(LocalDate.now())) {
 			setStatus("Admission date cannot be in the future.", true);
+			return;
+		}
+		*/
+		
+		String name = nameField.getText().trim();
+		String ageValue = ageField.getText().trim();
+		int age = Integer.parseInt(ageValue);
+		String gender = genderBox.getValue();
+		String phone = phoneField.getText().trim();
+		String diagnosis = diagnosisField.getText().trim();
+		LocalDate admissionDate = dateField.getValue();
+		
+		if (!validateForm()) {
 			return;
 		}
 
@@ -377,6 +391,43 @@ public class Main extends Application {
 			setStatus("Database error: " + e.getMessage(), true);
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean validateForm() {
+		String name = nameField.getText().trim();
+		String ageValue = ageField.getText().trim();
+		String gender = genderBox.getValue();
+		String phone = phoneField.getText().trim();
+		String diagnosis = diagnosisField.getText().trim();
+		LocalDate admissionDate = dateField.getValue();
+
+		if (name.isEmpty() || ageValue.isEmpty() || gender == null || phone.isEmpty() || diagnosis.isEmpty()
+				|| admissionDate == null) {
+			setStatus("Please complete all fields.", true);
+			return false;
+		}
+
+		int age;
+		try {
+			age = Integer.parseInt(ageValue);
+		} catch (NumberFormatException ex) {
+			setStatus("Age must be a whole number.", true);
+			return false;
+		}
+
+		if (age < 0 || age > 125) {
+			setStatus("Age must be between 0 and 125.", true);
+			return false;
+		}
+		if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
+			setStatus("Enter a valid phone number.", true);
+			return false;
+		}
+		if (admissionDate.isAfter(LocalDate.now())) {
+			setStatus("Admission date cannot be in the future.", true);
+			return false;
+		}
+		return true;
 	}
 
 	private void clearForm() {
