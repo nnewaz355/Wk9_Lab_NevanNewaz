@@ -41,7 +41,6 @@ public class Main extends Application {
 	private final TextField searchField = new TextField();
 
 	@Override
-
 	public void start(Stage stage) {
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(20));
@@ -305,7 +304,7 @@ public class Main extends Application {
 			if (count == 1) {
 				showAllPatients(); // Refresh TableView
 				clearFields(); // Reset form and table selection
-				setStatus("Patient ID " + patientId + " deleted successfully!", false);
+				setStatus("Patient ID deleted successfully!", false);
 			} else {
 				setStatus("No record was deleted.", true);
 			}
