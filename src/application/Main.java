@@ -83,6 +83,7 @@ public class Main extends Application {
 		addPatientButton.setOnAction(e -> addPatient());
 		
 		Button updateButton = new Button("Update");
+		updateButton.setOnAction(e -> updatePatient());
 		
 		Button deleteButton = new Button("Delete");
 		deleteButton.setOnAction(e -> deletePatient());
@@ -218,6 +219,70 @@ public class Main extends Application {
 			ex.printStackTrace();
 		}
 	}
+	
+	private void updatePatient() {
+	    Patient selected = patientsTable.getSelectionModel().getSelectedItem();
+	    if (selected == null) {
+	      setStatus("Select a patient in the table before updating.", true);
+	      return;
+	    }
+	    
+	    String name = nameField.getText().trim();
+		String ageValue = ageField.getText().trim();
+		String gender = genderBox.getValue();
+		String phone = phoneField.getText().trim();
+		String diagnosis = diagnosisField.getText().trim();
+		LocalDate admissionDate = dateField.getValue();
+
+		if (name.isEmpty() || ageValue.isEmpty() || gender == null || phone.isEmpty() || diagnosis.isEmpty()
+				|| admissionDate == null) {
+			setStatus("Please complete all fields.", true);
+			return;
+		}
+
+		int age;
+		try {
+			age = Integer.parseInt(ageValue);
+		} catch (NumberFormatException ex) {
+			setStatus("Age must be a whole number.", true);
+			return;
+		}
+
+		if (age < 0 || age > 125) {
+			setStatus("Age must be between 0 and 125.", true);
+			return;
+		}
+		if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
+			setStatus("Enter a valid phone number.", true);
+			return;
+		}
+
+	    String sql = "UPDATE patients SET name = ?, age = ?, gender = ?, phone = ?, "
+	        + "diagnosis = ?, admission_date = ? WHERE patient_id = ?";
+
+	    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+	    	statement.setString(1, name);
+			statement.setInt(2, age);
+			statement.setString(3, gender);
+			statement.setString(4, phone);
+			statement.setString(5, diagnosis);
+			statement.setObject(6, admissionDate);
+			statement.setInt(7, selected.getPatientId());
+
+			int count = statement.executeUpdate();
+			if (count == 1) {
+				setStatus("Patient updated successfully!", false);
+				showAllPatients();
+			} else {
+				setStatus("No record was updated.", true);
+			}
+	    } catch (SQLException ex) {
+	    	setStatus("Database error: " + ex.getMessage(), true);
+	    	ex.printStackTrace();
+	    }
+	  }
 	
 	private void deletePatient() {
 	    String idText = patientIdField.getText().trim();
