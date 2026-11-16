@@ -294,10 +294,16 @@ public class Main extends Application {
 	private void deletePatient() {
 		String idText = patientIdField.getText().trim();
 
-		if (idText.isEmpty()) {
+		if (idText.isBlank()) {
 			setStatus("Please select a patient record from the table to delete.", true);
 			return;
 		}
+		
+		Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+		confirm.setTitle("Confirm deletion");
+		confirm.setHeaderText("Delete patient record?");
+		confirm.setContentText("This action cannot be undone.");
+		if(confirm.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
 
 		int patientId = Integer.parseInt(idText);
 
