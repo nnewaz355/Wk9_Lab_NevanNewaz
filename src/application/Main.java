@@ -414,12 +414,15 @@ public class Main extends Application {
 	}
 
 	private void clearFields() {
+		patientIdField.clear();
 		nameField.clear();
 		ageField.clear();
 		genderBox.getSelectionModel().clearSelection();
 		phoneField.clear();
 		diagnosisField.clear();
+		dateField.setValue(null);
 		dateField.getEditor().clear();
+		patientsTable.getSelectionModel().clearSelection();
 	}
 
 	private void setStatus(String message, boolean error) {
