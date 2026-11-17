@@ -253,32 +253,10 @@ public class Main extends Application {
 		String diagnosis = diagnosisField.getText().trim();
 		LocalDate admissionDate = dateField.getValue();
 
-		if (name.isEmpty() || ageValue.isEmpty() || gender == null || phone.isEmpty() || diagnosis.isEmpty()
-				|| admissionDate == null) {
-			setStatus("Please complete all fields.", true);
+		if (!validateForm()) {
 			return;
 		}
-
-		int age;
-		try {
-			age = Integer.parseInt(ageValue);
-		} catch (NumberFormatException ex) {
-			setStatus("Age must be a whole number.", true);
-			return;
-		}
-
-		if (age < 0 || age > 125) {
-			setStatus("Age must be between 0 and 125.", true);
-			return;
-		}
-		if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
-			setStatus("Enter a valid phone number.", true);
-			return;
-		}
-		if (admissionDate.isAfter(LocalDate.now())) {
-			setStatus("Admission date cannot be in the future.", true);
-			return;
-		}
+		int age = Integer.parseInt(ageValue);
 
 		String sql = "UPDATE patients SET name = ?, age = ?, gender = ?, phone = ?, "
 				+ "diagnosis = ?, admission_date = ? WHERE patient_id = ?";
