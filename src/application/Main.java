@@ -111,6 +111,7 @@ public class Main extends Application {
 		VBox formPane = new VBox(15, form, formButtons);
 		formPane.setPrefWidth(380);
 		formPane.setPadding(new Insets(15));
+		HBox.setHgrow(formPane, Priority.ALWAYS);
 
 		searchField.setPromptText("Search by name or phone...");
 		HBox.setHgrow(searchField, Priority.ALWAYS);
@@ -143,6 +144,8 @@ public class Main extends Application {
 		patientsTable.getColumns().addAll(patientIdCol, nameCol, ageCol, genderCol, phoneCol, diagnosisCol, dateCol);
 		patientsTable.setItems(patientList);
 		
+		HBox.setHgrow(tablePane, Priority.ALWAYS);
+		
 		showAllPatients();
 
 		HBox center = new HBox(10, formPane, tablePane);
@@ -153,7 +156,7 @@ public class Main extends Application {
 		root.setBottom(statusLabel);
 
 		stage.setTitle("Hospital Management System");
-		stage.setScene(new Scene(root, 700, 520));
+		stage.setScene(new Scene(root, 1080, 720));
 		stage.show();
 	}
 
