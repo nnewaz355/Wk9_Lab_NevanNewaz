@@ -169,41 +169,6 @@ public class Main extends Application {
 	}
 
 	private void addPatient() {
-		/*
-		String name = nameField.getText().trim();
-		String ageValue = ageField.getText().trim();
-		String gender = genderBox.getValue();
-		String phone = phoneField.getText().trim();
-		String diagnosis = diagnosisField.getText().trim();
-		LocalDate admissionDate = dateField.getValue();
-
-		if (name.isEmpty() || ageValue.isEmpty() || gender == null || phone.isEmpty() || diagnosis.isEmpty()
-				|| admissionDate == null) {
-			setStatus("Please complete all fields.", true);
-			return;
-		}
-
-		int age;
-		try {
-			age = Integer.parseInt(ageValue);
-		} catch (NumberFormatException ex) {
-			setStatus("Age must be a whole number.", true);
-			return;
-		}
-
-		if (age < 0 || age > 125) {
-			setStatus("Age must be between 0 and 125.", true);
-			return;
-		}
-		if (!phone.matches("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$")) {
-			setStatus("Enter a valid phone number.", true);
-			return;
-		}
-		if (admissionDate.isAfter(LocalDate.now())) {
-			setStatus("Admission date cannot be in the future.", true);
-			return;
-		}
-		*/
 		
 		String name = nameField.getText().trim();
 		String ageValue = ageField.getText().trim();
