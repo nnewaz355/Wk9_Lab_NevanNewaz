@@ -202,7 +202,6 @@ public class Main extends Application {
 		
 		String name = nameField.getText().trim();
 		String ageValue = ageField.getText().trim();
-		int age = Integer.parseInt(ageValue);
 		String gender = genderBox.getValue();
 		String phone = phoneField.getText().trim();
 		String diagnosis = diagnosisField.getText().trim();
@@ -211,6 +210,7 @@ public class Main extends Application {
 		if (!validateForm()) {
 			return;
 		}
+		int age = Integer.parseInt(ageValue);
 
 		String sql = "INSERT INTO patients " + "(name, age, gender, phone, diagnosis, admission_date) "
 				+ "VALUES (?, ?, ?, ?, ?, ?)";
