@@ -142,13 +142,15 @@ public class Main extends Application {
 		dateCol.setCellValueFactory(new PropertyValueFactory<>("admissionDate"));
 		patientsTable.getColumns().addAll(patientIdCol, nameCol, ageCol, genderCol, phoneCol, diagnosisCol, dateCol);
 		patientsTable.setItems(patientList);
+		
+		showAllPatients();
 
 		HBox center = new HBox(10, formPane, tablePane);
 
-		VBox content = new VBox(12, /* form */center, statusLabel);
+		VBox content = new VBox(12, /* form */center);
 		content.setMaxWidth(1240);
 		root.setCenter(content);
-		root.setBottom(new Label("JavaFX • JDBC • MySQL"));
+		root.setBottom(statusLabel);
 
 		stage.setTitle("Student Registration System");
 		stage.setScene(new Scene(root, 700, 520));
