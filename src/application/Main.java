@@ -152,7 +152,7 @@ public class Main extends Application {
 		root.setCenter(content);
 		root.setBottom(statusLabel);
 
-		stage.setTitle("Student Registration System");
+		stage.setTitle("Hospital Management System");
 		stage.setScene(new Scene(root, 700, 520));
 		stage.show();
 	}
