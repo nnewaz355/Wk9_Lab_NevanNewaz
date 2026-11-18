@@ -282,7 +282,7 @@ public class Main extends Application {
 			if (count == 1) {
 				showAllPatients(); // Refresh TableView
 				clearFields(); // Reset form and table selection
-				setStatus("Patient ID deleted successfully!", false);
+				setStatus("Patient deleted successfully!", false);
 			} else {
 				setStatus("No record was deleted.", true);
 			}
